@@ -32,6 +32,8 @@ class SetupCommand extends Command
      */
     public function handle()
     {
+        $directory = $this->argument('directory');
+
         $stack = select(
             label: 'Choose your Boilerplate',
             options: [
@@ -45,6 +47,13 @@ class SetupCommand extends Command
             required: true,
         );
 
+        $repo = match ($stack) {
+            'vilt' => 'git@github.com:karakhanyans-tools/larafast.git',
+            'directory' => 'git@github.com:karakhanyans-tools/larafast-directories.git',
+            'api' => 'git@github.com:karakhanyans-tools/larafast-rest-api.git',
+            default => 'git@github.com:karakhanyans-tools/larafast-tall.git',
+        };
+
         $database = select(
             label: 'Choose your Database',
             options: [
@@ -57,15 +66,6 @@ class SetupCommand extends Command
             hint: 'Choose the database you want to use',
             required: true,
         );
-
-        $directory = $this->argument('directory');
-
-        $repo = match ($stack) {
-            'vilt' => 'git@github.com:karakhanyans-tools/larafast.git',
-            'directory' => 'git@github.com:karakhanyans-tools/larafast-directories.git',
-            'api' => 'git@github.com:karakhanyans-tools/larafast-rest-api.git',
-            default => 'git@github.com:karakhanyans-tools/larafast-tall.git',
-        };
 
         $this->processCommand('git clone ' . $repo . ' ' . $directory);
         $this->processCommand('composer install', $directory);
