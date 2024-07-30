@@ -68,16 +68,14 @@ class SetupCommand extends Command
             required: true,
         );
 
-        info('Installing Larafast...');
-
-        if (File::exists('../' . $directory) && confirm('Directory already exists. Do you want to overwrite it?')) {
-            File::delete('../' . $directory);
-        }
-
-        $this->processCommand('git clone ' . $repo . ' ' . $directory, $directory, true);
+        info('Installing Larafast ' . ucfirst($stack) . ' in ' . $directory . ' directory...');
         info('Cloning repository...');
+        $this->processCommand('git clone ' . $repo . ' ' . $directory, $directory, true);
+        info('Installing dependencies...');
         $this->processCommand('composer install', $directory);
+        info('Installing NPM dependencies...');
         $this->processCommand('npm install', $directory);
+        info('Building assets...');
         $this->processCommand('cp .env.example .env', $directory);
 
         $this->replaceInFile(
