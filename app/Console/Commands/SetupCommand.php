@@ -146,7 +146,7 @@ class SetupCommand extends Command
         $this->replaceInFile(
             $defaults,
             collect($defaults)->map(fn($default) => "# {$default}")->all(),
-            $directory . '/.env'
+            '../' . $directory . '/.env'
         );
     }
 
@@ -163,7 +163,7 @@ class SetupCommand extends Command
         $this->replaceInFile(
             $defaults,
             collect($defaults)->map(fn($default) => substr($default, 2))->all(),
-            $directory . '/.env'
+            '../' . $directory . '/.env'
         );
     }
 
@@ -172,17 +172,11 @@ class SetupCommand extends Command
         $this->pregReplaceInFile(
             '/DB_CONNECTION=.*/',
             'DB_CONNECTION=' . $database,
-            $directory . '/.env'
-        );
-
-        $this->pregReplaceInFile(
-            '/DB_CONNECTION=.*/',
-            'DB_CONNECTION=' . $database,
-            $directory . '/.env.example'
+            '../' . $directory . '/.env'
         );
 
         if ($database === 'sqlite') {
-            $environment = file_get_contents($directory . '/.env');
+            $environment = file_get_contents('../' . $directory . '/.env');
 
             // If database options aren't commented, comment them for SQLite...
             if (!str_contains($environment, '# DB_HOST=127.0.0.1')) {
@@ -206,14 +200,14 @@ class SetupCommand extends Command
             $this->replaceInFile(
                 'DB_PORT=3306',
                 'DB_PORT=' . $defaultPorts[$database],
-                $directory . '/.env'
+                '../' . $directory . '/.env'
             );
         }
 
         $this->replaceInFile(
             'DB_DATABASE=larafast',
             'DB_DATABASE=' . str_replace('-', '_', strtolower($directory)),
-            $directory . '/.env'
+            '../' . $directory . '/.env'
         );
     }
 }
