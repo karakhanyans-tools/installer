@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use function Laravel\Prompts\confirm;
@@ -69,8 +70,8 @@ class SetupCommand extends Command
 
         info('Installing Larafast...');
 
-        if (is_dir('../' . $directory) && !confirm('Directory already exists. Do you want to overwrite it?')) {
-            rmdir('../' . $directory);
+        if (File::exists('../' . $directory) && !confirm('Directory already exists. Do you want to overwrite it?')) {
+            File::delete('../' . $directory);
         }
 
         $this->processCommand('git clone ' . $repo . ' ' . $directory, $directory, true);
