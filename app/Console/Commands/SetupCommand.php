@@ -68,7 +68,7 @@ class SetupCommand extends Command
         );
 
         info('Installing Larafast...');
-        $this->processCommand('git clone ' . $repo . ' ' . $directory, $directory);
+        $this->processCommand('git clone ' . $repo . ' ' . $directory, $directory, true);
         info('Cloning repository...');
         $this->processCommand('composer install', $directory);
         $this->processCommand('npm install', $directory);
