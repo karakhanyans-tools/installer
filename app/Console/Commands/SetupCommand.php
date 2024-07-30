@@ -11,6 +11,8 @@ use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\warning;
+use function Laravel\Prompts\text;
+
 
 class SetupCommand extends Command
 {
@@ -68,6 +70,12 @@ class SetupCommand extends Command
             required: true,
         );
 
+        $git = text(
+            label: 'Want to set up a new git repository?',
+            placeholder: 'https://github.com/karakhanyans-tools/larafast-tall.git',
+            hint: 'Enter the git repository URL'
+        );
+
         info('Installing Larafast ' . ucfirst($stack) . ' in ' . $directory . ' directory...');
         info('Cloning repository...');
         $this->processCommand('git clone ' . $repo . ' ' . $directory, $directory, true);
@@ -90,10 +98,35 @@ class SetupCommand extends Command
             '../' . $directory . '/.env'
         );
 
+        info('Configuring database...');
         $this->configureDefaultDatabaseConnection($directory, $database);
-
+        info('Generating application key...');
         $this->processCommand('php artisan key:generate', $directory);
+        info('Migrating database...');
         $this->processCommand('php artisan migrate --force', $directory);
+
+        $this->processCommand('rm -rf .git', $directory);
+        $this->processCommand('git init', $directory);
+        $this->processCommand('git add .', $directory);
+        $this->processCommand('git commit -m "Initial commit"', $directory);
+
+        if ($git) {
+            info('Setting up new git repository...');
+            $this->processCommand('git remote add origin ' . $git, $directory);
+            $this->processCommand('git branch -M master', $directory);
+            $this->processCommand('git push -u origin master', $directory);
+        }
+
+        $upstream = match ($stack) {
+            'vilt' => 'https://github.com/karakhanyans-tools/larafast.git',
+            'directory' => 'https://github.com/karakhanyans-tools/larafast-directories.git',
+            'api' => 'https://github.com/karakhanyans-tools/larafast-rest-api.git',
+            default => 'https://github.com/karakhanyans-tools/larafast-tall.git',
+        };
+
+        $this->processCommand('git remote add larafast ' . $upstream, $directory);
+
+        $this->processCommand('rm -rf larafast-installer');
 
         info('Larafast ' . ucfirst($stack) . ' Installed Successfully');
 
@@ -126,7 +159,8 @@ class SetupCommand extends Command
         try {
             $process->run();
 
-            return $process->getOutput();
+            $process->getOutput();
+            return $process;
         } catch (ProcessFailedException $exception) {
             warning($exception->getMessage());
             return 1;
