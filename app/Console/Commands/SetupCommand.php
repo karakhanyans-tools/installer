@@ -118,15 +118,9 @@ class SetupCommand extends Command
 
     protected function processCommand($command, $directory = null, $clone = false)
     {
-        if ($directory) {
-            if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $directory));
-            }
-
-            $command = $clone
-                ? 'cd .. && ' . $command
-                : 'cd ../' . $directory . ' && ' . $command;
-        }
+        $command = $clone
+            ? 'cd .. && ' . $command
+            : 'cd ../' . $directory . ' && ' . $command;
 
         $process = Process::fromShellCommandline($command);
 
