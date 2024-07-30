@@ -126,6 +126,7 @@ class SetupCommand extends Command
             default => 'https://github.com/karakhanyans-tools/larafast-tall.git',
         };
 
+        info('Setting up upstream repository...');
         $this->processCommand('git remote add larafast ' . $upstream, $directory);
 
         $this->processCommand('rm -rf larafast-installer');
