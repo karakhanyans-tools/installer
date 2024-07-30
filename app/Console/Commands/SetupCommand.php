@@ -70,7 +70,7 @@ class SetupCommand extends Command
 
         info('Installing Larafast...');
 
-        if (File::exists('../' . $directory) && !confirm('Directory already exists. Do you want to overwrite it?')) {
+        if (File::exists('../' . $directory) && confirm('Directory already exists. Do you want to overwrite it?')) {
             File::delete('../' . $directory);
         }
 
