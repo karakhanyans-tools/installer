@@ -124,9 +124,7 @@ class SetupCommand extends Command
 
         try {
 //            $process->mustRun();
-            $process->run(function ($type, $line) use ($output) {
-                $output->write('    '.$line);
-            });
+            $process->run();
 
             return $process;
         } catch (ProcessFailedException $exception) {
