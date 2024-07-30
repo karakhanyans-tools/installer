@@ -68,6 +68,11 @@ class SetupCommand extends Command
         );
 
         info('Installing Larafast...');
+
+        if (is_dir('../' . $directory) && !confirm('Directory already exists. Do you want to overwrite it?')) {
+            rmdir('../' . $directory);
+        }
+
         $this->processCommand('git clone ' . $repo . ' ' . $directory, $directory, true);
         info('Cloning repository...');
         $this->processCommand('composer install', $directory);
