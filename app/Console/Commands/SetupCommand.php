@@ -95,7 +95,8 @@ class SetupCommand extends Command
         $this->processCommand('php artisan key:generate', $directory);
         $this->processCommand('php artisan migrate --force', $directory);
 
-        info('Larafast Installed Successfully');
+        info('Larafast ' . ucfirst($stack) . ' Installed Successfully');
+
     }
 
     protected function pregReplaceInFile(string $pattern, string $replace, string $file): void
