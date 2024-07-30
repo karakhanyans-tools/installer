@@ -77,13 +77,13 @@ class SetupCommand extends Command
         $this->replaceInFile(
             'APP_NAME=Laravel',
             'APP_NAME=' . ucfirst($directory),
-            $directory . '/.env'
+            '../' . $directory . '/.env'
         );
 
         $this->replaceInFile(
             'APP_URL=http://localhost',
             'APP_URL=http://' . $directory . '.test',
-            $directory . '/.env'
+            '../' . $directory . '/.env'
         );
 
         $this->configureDefaultDatabaseConnection($directory, $database);
