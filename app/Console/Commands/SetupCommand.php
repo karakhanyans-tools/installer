@@ -68,7 +68,7 @@ class SetupCommand extends Command
         );
 
         info('Installing Larafast...');
-        $this->processCommand('git clone ' . $repo . ' ' . $directory);
+        $this->processCommand('git clone ' . $repo . ' ' . $directory, $directory);
         info('Cloning repository...');
         $this->processCommand('composer install', $directory);
         $this->processCommand('npm install', $directory);
@@ -112,8 +112,14 @@ class SetupCommand extends Command
 
     protected function processCommand($command, $directory = null)
     {
+        // check if directory exists, if not create it
+
         if ($directory) {
-            $command = 'cd ' . $directory . ' && ' . $command;
+            if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $directory));
+            }
+
+            $command = 'cd ../' . $directory . ' && ' . $command;
         }
 
         $process = Process::fromShellCommandline($command);
