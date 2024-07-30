@@ -110,16 +110,16 @@ class SetupCommand extends Command
         );
     }
 
-    protected function processCommand($command, $directory = null)
+    protected function processCommand($command, $directory = null, $clone = false)
     {
-        // check if directory exists, if not create it
-
         if ($directory) {
             if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $directory));
             }
 
-            $command = 'cd ../' . $directory . ' && ' . $command;
+            $command = $clone
+                ? 'cd .. && git clone ' . $command
+                : 'cd ../' . $directory . ' && ' . $command;
         }
 
         $process = Process::fromShellCommandline($command);
@@ -145,8 +145,8 @@ class SetupCommand extends Command
 
         $this->replaceInFile(
             $defaults,
-            collect($defaults)->map(fn ($default) => "# {$default}")->all(),
-            $directory.'/.env'
+            collect($defaults)->map(fn($default) => "# {$default}")->all(),
+            $directory . '/.env'
         );
     }
 
@@ -162,8 +162,8 @@ class SetupCommand extends Command
 
         $this->replaceInFile(
             $defaults,
-            collect($defaults)->map(fn ($default) => substr($default, 2))->all(),
-            $directory.'/.env'
+            collect($defaults)->map(fn($default) => substr($default, 2))->all(),
+            $directory . '/.env'
         );
     }
 
@@ -171,21 +171,21 @@ class SetupCommand extends Command
     {
         $this->pregReplaceInFile(
             '/DB_CONNECTION=.*/',
-            'DB_CONNECTION='.$database,
-            $directory.'/.env'
+            'DB_CONNECTION=' . $database,
+            $directory . '/.env'
         );
 
         $this->pregReplaceInFile(
             '/DB_CONNECTION=.*/',
-            'DB_CONNECTION='.$database,
-            $directory.'/.env.example'
+            'DB_CONNECTION=' . $database,
+            $directory . '/.env.example'
         );
 
         if ($database === 'sqlite') {
-            $environment = file_get_contents($directory.'/.env');
+            $environment = file_get_contents($directory . '/.env');
 
             // If database options aren't commented, comment them for SQLite...
-            if (! str_contains($environment, '# DB_HOST=127.0.0.1')) {
+            if (!str_contains($environment, '# DB_HOST=127.0.0.1')) {
                 $this->commentDatabaseConfigurationForSqlite($directory);
 
                 return;
@@ -205,15 +205,15 @@ class SetupCommand extends Command
         if (isset($defaultPorts[$database])) {
             $this->replaceInFile(
                 'DB_PORT=3306',
-                'DB_PORT='.$defaultPorts[$database],
-                $directory.'/.env'
+                'DB_PORT=' . $defaultPorts[$database],
+                $directory . '/.env'
             );
         }
 
         $this->replaceInFile(
             'DB_DATABASE=larafast',
-            'DB_DATABASE='.str_replace('-', '_', strtolower($directory)),
-            $directory.'/.env'
+            'DB_DATABASE=' . str_replace('-', '_', strtolower($directory)),
+            $directory . '/.env'
         );
     }
 }
