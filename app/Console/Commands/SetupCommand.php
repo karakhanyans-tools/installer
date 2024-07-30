@@ -123,8 +123,12 @@ class SetupCommand extends Command
         $process = Process::fromShellCommandline($command);
 
         try {
-            $process->mustRun();
-            info($process->getOutput());
+//            $process->mustRun();
+            $process->run(function ($type, $line) use ($output) {
+                $output->write('    '.$line);
+            });
+
+            return $process;
         } catch (ProcessFailedException $exception) {
             warning($exception->getMessage());
             return 1;
