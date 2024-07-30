@@ -85,7 +85,7 @@ class SetupCommand extends Command
         $this->processCommand('composer install', $directory);
         info('Installing NPM dependencies...');
         $this->processCommand('npm install', $directory);
-        info('Building assets...');
+        info('Setting up .env');
         $this->processCommand('cp .env.example .env', $directory);
 
         $this->replaceInFile(
