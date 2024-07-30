@@ -118,7 +118,7 @@ class SetupCommand extends Command
             }
 
             $command = $clone
-                ? 'cd .. && git clone ' . $command
+                ? 'cd .. && ' . $command
                 : 'cd ../' . $directory . ' && ' . $command;
         }
 
