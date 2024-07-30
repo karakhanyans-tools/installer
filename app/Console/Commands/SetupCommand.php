@@ -71,7 +71,7 @@ class SetupCommand extends Command
         );
 
         $git = text(
-            label: 'Want to set up a new git repository?',
+            label: 'Want to set up a new git repository? (Enter to skip)',
             placeholder: 'https://github.com/karakhanyans-tools/larafast-tall.git',
             default: '',
             required: false,
