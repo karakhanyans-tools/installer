@@ -79,7 +79,7 @@ class SetupCommand extends Command
         $this->processCommand('cp .env.example .env', $directory);
 
         $this->replaceInFile(
-            'APP_NAME=Laravel',
+            'APP_NAME=Larafast',
             'APP_NAME=' . ucfirst($directory),
             '../' . $directory . '/.env'
         );
