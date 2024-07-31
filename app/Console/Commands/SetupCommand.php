@@ -134,8 +134,8 @@ class SetupCommand extends Command
 
         $this->processCommand('rm -rf .git', $directory);
         $this->processCommand('git init', $directory);
-        $this->processCommand('git add .', $directory);
-        $this->processCommand('git commit -m "Initial commit"', $directory);
+        $this->processCommand('git add . --quiet', $directory);
+        $this->processCommand('git commit -m "Initial commit" --quiet', $directory);
 
         if ($git) {
             info('Setting up new git repository...');
@@ -143,7 +143,6 @@ class SetupCommand extends Command
             $this->processCommand('git branch -M master', $directory);
             $this->processCommand('git push -u origin master', $directory);
         }
-
 
         info('Setting up upstream repository...');
         $this->processCommand('git remote add larafast ' . $httpsRepoUrl, $directory);
