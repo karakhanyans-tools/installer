@@ -134,8 +134,8 @@ class SetupCommand extends Command
 
         $this->processCommand('rm -rf .git', $directory);
         $this->processCommand('git init', $directory);
-        $this->processCommand('git add . --quiet', $directory);
-        $this->processCommand('git commit -m "Initial commit" --quiet', $directory);
+        $this->processCommand('git add .', $directory);
+        $this->processCommand('git commit -m "Initial commit"', $directory);
 
         if ($git) {
             info('Setting up new git repository...');
