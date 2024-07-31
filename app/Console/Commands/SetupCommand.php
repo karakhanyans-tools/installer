@@ -50,11 +50,18 @@ class SetupCommand extends Command
             required: true,
         );
 
-        $repo = match ($stack) {
+        $sshRepoUrl = match ($stack) {
             'vilt' => 'git@github.com:karakhanyans-tools/larafast.git',
             'directory' => 'git@github.com:karakhanyans-tools/larafast-directories.git',
             'api' => 'git@github.com:karakhanyans-tools/larafast-rest-api.git',
             default => 'git@github.com:karakhanyans-tools/larafast-tall.git',
+        };
+
+        $httpsRepoUrl = match ($stack) {
+            'vilt' => 'https://github.com/karakhanyans-tools/larafast.git',
+            'directory' => 'https://github.com/karakhanyans-tools/larafast-directories.git',
+            'api' => 'https://github.com/karakhanyans-tools/larafast-rest-api.git',
+            default => 'https://github.com/karakhanyans-tools/larafast-tall.git',
         };
 
         $database = select(
@@ -80,11 +87,27 @@ class SetupCommand extends Command
 
         info('Installing Larafast ' . ucfirst($stack) . ' in ' . $directory . ' directory...');
         info('Cloning repository...');
-        $this->processCommand('git clone ' . $repo . ' ' . $directory, $directory, true);
+
+        $this->processCommand('git clone ' . $sshRepoUrl . ' ' . $directory, $directory, true);
+
+        if (!File::exists('../' . $directory)) {
+            $this->processCommand('git clone ' . $httpsRepoUrl . ' ' . $directory, $directory, true);
+        }
+
+        if (!File::exists('../' . $directory)) {
+            $this->error('Failed to clone repository.');
+
+            $this->error('If you haven\'t purchased Larafast yet, you can do so at https://larafast.com.');
+
+            return;
+        }
+
         info('Installing dependencies...');
         $this->processCommand('composer install', $directory);
+
         info('Installing NPM dependencies...');
         $this->processCommand('npm install', $directory);
+
         info('Setting up .env');
         $this->processCommand('cp .env.example .env', $directory);
 
@@ -102,8 +125,10 @@ class SetupCommand extends Command
 
         info('Configuring database...');
         $this->configureDefaultDatabaseConnection($directory, $database);
+
         info('Generating application key...');
         $this->processCommand('php artisan key:generate', $directory);
+
         info('Migrating database...');
         $this->processCommand('php artisan migrate --force', $directory);
 
@@ -119,15 +144,9 @@ class SetupCommand extends Command
             $this->processCommand('git push -u origin master', $directory);
         }
 
-        $upstream = match ($stack) {
-            'vilt' => 'https://github.com/karakhanyans-tools/larafast.git',
-            'directory' => 'https://github.com/karakhanyans-tools/larafast-directories.git',
-            'api' => 'https://github.com/karakhanyans-tools/larafast-rest-api.git',
-            default => 'https://github.com/karakhanyans-tools/larafast-tall.git',
-        };
 
         info('Setting up upstream repository...');
-        $this->processCommand('git remote add larafast ' . $upstream, $directory);
+        $this->processCommand('git remote add larafast ' . $httpsRepoUrl, $directory);
 
         $this->processCommand('rm -rf larafast-installer');
 
@@ -162,10 +181,9 @@ class SetupCommand extends Command
         try {
             $process->run();
 
-            $process->getOutput();
-            return $process;
+            $this->info($process->getOutput());
         } catch (ProcessFailedException $exception) {
-            warning($exception->getMessage());
+            $this->error($exception->getMessage());
             return 1;
         }
     }
