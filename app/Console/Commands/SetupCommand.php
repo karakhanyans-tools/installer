@@ -147,8 +147,6 @@ class SetupCommand extends Command
         info('Setting up upstream repository...');
         $this->processCommand('git remote add larafast ' . $httpsRepoUrl, $directory);
 
-        $this->processCommand('rm -rf larafast-installer');
-
         info('Larafast ' . ucfirst($stack) . ' Installed Successfully');
 
     }
