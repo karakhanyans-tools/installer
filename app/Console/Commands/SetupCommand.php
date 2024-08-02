@@ -46,7 +46,7 @@ class SetupCommand extends Command
                 'api' => 'Larafast API Boilerplate',
             ],
             default: 'tall',
-            hint: 'Make sure you have access in git repository to install Larafast',
+            hint: 'Make sure you have access to git repository to install Larafast',
             required: true,
         );
 
@@ -76,12 +76,6 @@ class SetupCommand extends Command
             hint: 'Choose the database you want to use',
             required: true,
         );
-
-        $admin = confirm('Do you want to create an admin?');
-
-        if ($admin) {
-            $this->processCommand('php artisan make:admin', $directory);
-        }
 
         $git = text(
             label: 'Want to set up a new git repository? (Enter to skip)',
