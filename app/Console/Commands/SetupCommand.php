@@ -77,6 +77,12 @@ class SetupCommand extends Command
             required: true,
         );
 
+        $admin = confirm('Do you want to create an admin?');
+
+        if ($admin) {
+            $this->processCommand('php artisan make:admin', $directory);
+        }
+
         $git = text(
             label: 'Want to set up a new git repository? (Enter to skip)',
             placeholder: 'https://github.com/karakhanyans-tools/larafast-tall.git',
