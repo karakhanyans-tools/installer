@@ -21,7 +21,7 @@ class SetupCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'larafast:install {directory}';
+    protected string $signature = 'larafast:install {directory}';
 
     /**
      * The console command description.
@@ -148,6 +148,7 @@ class SetupCommand extends Command
         $this->processCommand('git remote add larafast ' . $httpsRepoUrl, $directory);
 
         info('Larafast ' . ucfirst($stack) . ' Installed Successfully');
+        info('You can now run "npm run dev" to compile your assets and "php artisan serve" to start the server.');
 
     }
 
