@@ -41,6 +41,7 @@ class SetupCommand extends Command
             label: 'Choose your Boilerplate',
             options: [
                 'tall' => 'Larafast TALL Stack (Tailwind CSS, Alpine.js, Laravel, Livewire)',
+                'tenancy' => 'Larafast Multi-Tenancy Starter Kit',
                 'vilt' => 'Larafast VILT Stack (Vue.js, Inertia.js, Laravel, Tailwind CSS)',
                 'directory' => 'Larafast Directory Boilerplate',
                 'api' => 'Larafast API Boilerplate',
@@ -54,6 +55,7 @@ class SetupCommand extends Command
             'vilt' => 'git@github.com:karakhanyans-tools/larafast.git',
             'directory' => 'git@github.com:karakhanyans-tools/larafast-directories.git',
             'api' => 'git@github.com:karakhanyans-tools/larafast-rest-api.git',
+            'tenancy' => 'git@github.com:karakhanyans-tools/larafast-multitenancy.git',
             default => 'git@github.com:karakhanyans-tools/larafast-tall.git',
         };
 
@@ -61,6 +63,7 @@ class SetupCommand extends Command
             'vilt' => 'https://github.com/karakhanyans-tools/larafast.git',
             'directory' => 'https://github.com/karakhanyans-tools/larafast-directories.git',
             'api' => 'https://github.com/karakhanyans-tools/larafast-rest-api.git',
+            'tenancy' => 'https://github.com/karakhanyans-tools/larafast-multitenancy.git',
             default => 'https://github.com/karakhanyans-tools/larafast-tall.git',
         };
 
