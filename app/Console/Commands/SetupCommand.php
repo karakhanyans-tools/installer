@@ -21,7 +21,7 @@ class SetupCommand extends Command
      *
      * @var string
      */
-    protected string $signature = 'larafast:install {directory}';
+    protected $signature = 'larafast:install {directory}';
 
     /**
      * The console command description.
